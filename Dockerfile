@@ -14,15 +14,14 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /var/www/html
 
+COPY composer.json composer.lock ./
+
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
-    && php -r "unlink('composer-setup.php');"
+    && php -r "unlink('composer-setup.php');" \
+    && composer install --no-dev --optimize-autoloader
 
-COPY composer.json composer.lock /var/www/html/
-
-RUN composer install --no-dev --optimize-autoloader
-
-COPY . /var/www/html
+COPY . .
 
 RUN mkdir -p /var/www/html/logs \
     && chown -R www-data:www-data /var/www/html/logs \
