@@ -29,11 +29,17 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php -r "unlink('composer-setup.php');"
 
 # Instalar dependências PHP
-# CORREÇÃO: Adicionando --ignore-platform-req=ext-mongodb para contornar a incompatibilidade de versão da extensão
+# CORREÇÃO ANTERIOR: Adicionando --ignore-platform-req=ext-mongodb para contornar a incompatibilidade de versão da extensão
 RUN /usr/local/bin/composer install --no-dev --optimize-autoloader --prefer-dist --ignore-platform-req=ext-mongodb
 
 # Copiar o restante do código do projeto
 COPY . .
+
+# CORREÇÃO PARA O ERRO FORBIDDEN (403):
+# 1. Redefine o DocumentRoot do Apache para a pasta 'public'.
+# 2. Habilita AllowOverride All para permitir o uso de arquivos .htaccess (necessário para roteamento de frameworks).
+RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf \
+    && sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 
 # Ajustar permissões (Apache roda como www-data)
 RUN chown -R www-data:www-data /var/www/html \
