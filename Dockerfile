@@ -29,8 +29,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php -r "unlink('composer-setup.php');"
 
 # Instalar dependências PHP
-# CORREÇÃO ANTERIOR: Adicionando --ignore-platform-req=ext-mongodb para contornar a incompatibilidade de versão da extensão
-RUN /usr/local/bin/composer install --no-dev --optimize-autoloader --prefer-dist
+RUN /usr/local/bin/composer install --no-dev --optimize-autoloader --prefer-dist --ignore-platform-req=ext-mongodb
 
 # Copiar o restante do código do projeto
 COPY . .
