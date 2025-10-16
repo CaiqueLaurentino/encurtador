@@ -11,10 +11,10 @@ header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload"
 $slug = trim($_GET['s'] ?? '', '/');
 
 // CORREÇÃO: Se a slug estiver vazia (acesso à raiz '/'), redireciona para a página do formulário (index.php).
-if ($slug === '') { 
-    header('Location: index.php', true, 302);
-    exit;
-}
+// if ($slug === '') { 
+//     header('Location: index.php', true, 302);
+//     exit;
+// }
 
 $link = getLink($slug);
 if ($link === null) { 
