@@ -1,3 +1,13 @@
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ redirect.php?s=$1 [QSA,L]
+# Conteúdo do arquivo public/.htaccess
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # 1. Se a requisição for para a raiz (/) E não for um arquivo ou diretório existente,
+    # permite que o Apache carregue o DirectoryIndex padrão (que é index.php)
+    RewriteRule ^$ - [L]
+
+    # 2. Se a requisição NÃO for para um arquivo existente, reescreva para redirect.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ redirect.php?s=$1 [QSA,L]
+</IfModule>
